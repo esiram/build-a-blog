@@ -26,7 +26,11 @@ class BlogPosts(db.Model):        #this will define an entity and we need to def
     title = db.StringProperty(required = True)       #class name BlogPosts =  the table name (see render_front in MainPage(Handler) below)
     entry = db.TextProperty(required = True)
     created = db.DateTimeProperty(auto_now_add = True)  #look up google docs
+    last_modified = db.DateTimeProperty(auto_now = True)
 
+    def render(self):       # this def render(self) added from solution Part1 of Basic Blog on udacity
+        self._render_text = self.content.replace('\n', '<br>')   #this part makes new lines show up
+        return render_str("front.html", p = self)
 
 
 
@@ -34,8 +38,8 @@ class BlogPosts(db.Model):        #this will define an entity and we need to def
 class MainPage(Handler):                                # we want to show the form and the submitted blog posts
     def render_front(self, title="", entry="", error=""):
         entries = db.GqlQuery("SELECT * FROM BlogPosts "        # name of table is the class name BlogPosts
-                              "ORDER BY created DESC ")         # this query will store results as a cursor (aka a pointer to the results)(query uses descending for most recent first)
-
+                              "ORDER BY created DESC "
+                              "LIMIT 5")         # this query will store results as a cursor (aka a pointer to the results)(query uses descending for most recent first)
 
         self.render("front.html", title=title, entry=entry, error=error, entries=entries)  #the parameters are passed into the template
 
