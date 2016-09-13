@@ -34,27 +34,22 @@ class BlogPosts(db.Model):        #this will define an entity and we need to def
 
 
 
-
 class MainPage(Handler):                                # we want to show the form and the submitted blog posts
     def render_front(self, title="", entry="", error=""):
         entries = db.GqlQuery("SELECT * FROM BlogPosts "        # name of table is the class name BlogPosts
                               "ORDER BY created DESC "
                               "LIMIT 5")         # this query will store results as a cursor (aka a pointer to the results)(query uses descending for most recent first)
-
         self.render("front.html", title=title, entry=entry, error=error, entries=entries)  #the parameters are passed into the template
 
     def get(self):
         self.render_front()                                       #to draw the blank form
 
-
     def post(self):                                                     #to get entries submitted on the blog
         title = self.request.get("title")
         entry = self.request.get("entry")
-
         if title and entry:                     #this is a success case
             e = BlogPosts(title = title, entry = entry)    #taking from class BlogPosts
             e.put()                                                                         #to store blog post entry in database
-
             self.redirect("/")                  #to redirect to frontpage
         else:
             error = "Please submit both a post title and a post entry.  Thank you."    #this is a fail case
@@ -62,4 +57,5 @@ class MainPage(Handler):                                # we want to show the fo
 
 
 
-app = webapp2.WSGIApplication([('/', MainPage)], debug=True)
+app = webapp2.WSGIApplication([('/', MainPage)],
+                                debug=True)
