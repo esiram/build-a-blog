@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+{% extends "base.html" %}
+
+{% block content %}
+        <h1> Five Most Recent Blogs:</h1>
+
+        <hr>
+
+        {% for entry in entries %}
+        <div class="Blogposts">
+          <div class="entry-title">{{entry.title}}  </div>
+          <pre class="entry-body">{{entry.entry}}</pre>
+        </div>
+        {% endfor %}
+
+{% endblock %}
+</html>

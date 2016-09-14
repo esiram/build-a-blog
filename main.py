@@ -10,7 +10,7 @@ jinja_env = jinja2.Environment(loader = jinja2.FileSystemLoader(template_dir),
                                autoescape = True)
 
 
-class Handler(webapp2.RequestHandler):
+class Handler(webapp2.RequestHandler):  #"Blog handler" on udacity
     def write(self, *a, **kw):
         self.response.out.write(*a, **kw)
 
@@ -21,8 +21,12 @@ class Handler(webapp2.RequestHandler):
     def render(self, template, **kw):
         self.write(self.render_str(template, **kw)) #to send back to browser (a string)
 
+#blogstuff
 
-class BlogPosts(db.Model):        #this will define an entity and we need to define types of that entity (types, date, int, float etc) (we're pulling from the database now)
+def blog_key(name = 'default'):
+    return db.Key.from_path('blogs', name)  #value of the blog key parent
+
+class BlogPosts(db.Model):       #class "Post" on udacity  #this will define an entity and we need to define types of that entity (types, date, int, float etc) (we're pulling from the database now)
     title = db.StringProperty(required = True)       #class name BlogPosts =  the table name (see render_front in MainPage(Handler) below)
     entry = db.TextProperty(required = True)
     created = db.DateTimeProperty(auto_now_add = True)  #look up google docs
@@ -34,7 +38,7 @@ class BlogPosts(db.Model):        #this will define an entity and we need to def
 
 
 
-class MainPage(Handler):                                # we want to show the form and the submitted blog posts
+class MainPage(Handler):         #"" is main handler in udacity                       # we want to show the form and the submitted blog posts
     def render_front(self, title="", entry="", error=""):
         entries = db.GqlQuery("SELECT * FROM BlogPosts "        # name of table is the class name BlogPosts
                               "ORDER BY created DESC "
@@ -50,12 +54,22 @@ class MainPage(Handler):                                # we want to show the fo
         if title and entry:                     #this is a success case
             e = BlogPosts(title = title, entry = entry)    #taking from class BlogPosts
             e.put()                                                                         #to store blog post entry in database
-            self.redirect("/")                  #to redirect to frontpage
+            self.redirect("/blog")                  #to redirect to MainPage "/"
         else:
             error = "Please submit both a post title and a post entry.  Thank you."    #this is a fail case
             self.render_front(title, entry, error)
 
 
 
-app = webapp2.WSGIApplication([('/', MainPage)],
+class MainBlog(Handler):      #a separate page for new posts to submit to created 9-14-16
+    def get(self):
+        entries = db.GqlQuery("SELECT * FROM BlogPosts "        # name of table is the class name BlogPosts
+                              "ORDER BY created DESC "
+                              "LIMIT 5")         # this query will store results as a cursor (aka a pointer to the results)(query uses descending for most recent first)
+        self.render("mainblog.html", entries=entries)  #the parameters are passed into the template
+
+
+
+app = webapp2.WSGIApplication([('/', MainPage),
+                               ('/blog', MainBlog)],
                                 debug=True)
