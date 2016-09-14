@@ -38,12 +38,12 @@ class BlogPosts(db.Model):       #class "Post" on udacity  #this will define an 
 
 
 
-class MainPage(Handler):         #"" is main handler in udacity                       # we want to show the form and the submitted blog posts
+class NewPost(Handler):     #formerly MainHandler(handler) and in the self.render the html was "front.html"(-es9/14/16)  # we want to show the form and the submitted blog posts
     def render_front(self, title="", entry="", error=""):
         entries = db.GqlQuery("SELECT * FROM BlogPosts "        # name of table is the class name BlogPosts
                               "ORDER BY created DESC "
                               "LIMIT 5")         # this query will store results as a cursor (aka a pointer to the results)(query uses descending for most recent first)
-        self.render("front.html", title=title, entry=entry, error=error, entries=entries)  #the parameters are passed into the template
+        self.render("newpost.html", title=title, entry=entry, error=error, entries=entries)  #the parameters are passed into the template
 
     def get(self):
         self.render_front()                                       #to draw the blank form
@@ -59,6 +59,17 @@ class MainPage(Handler):         #"" is main handler in udacity                 
             error = "Please submit both a post title and a post entry.  Thank you."    #this is a fail case
             self.render_front(title, entry, error)
 
+#class PostPage(Handler):
+#    def get(self, entry_id)    #I'm using "entry" for "post", but don't have all of that completed.....
+#    key = db.Key.from_path('Post', int(entry_id), parent=blog_key())  #see udacity solution pt2 1:54min
+#    entry = db.get(key)
+#    if not post:
+#        self.error(404)
+#        return
+#    self.render("permalink.html", post = post)
+
+
+
 
 
 class MainBlog(Handler):      #a separate page for new posts to submit to created 9-14-16
@@ -70,6 +81,7 @@ class MainBlog(Handler):      #a separate page for new posts to submit to create
 
 
 
-app = webapp2.WSGIApplication([('/', MainPage),
+app = webapp2.WSGIApplication([('/', NewPost),
+                               ('/newpost', NewPost),
                                ('/blog', MainBlog)],
                                 debug=True)
