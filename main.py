@@ -26,6 +26,8 @@ class Handler(webapp2.RequestHandler):  #"Blog handler" on udacity
 def blog_key(name = 'default'):
     return db.Key.from_path('blogs', name)  #value of the blog key parent
 
+
+
 class BlogPosts(db.Model):       #class "Post" on udacity  #this will define an entity and we need to define types of that entity (types, date, int, float etc) (we're pulling from the database now)
     title = db.StringProperty(required = True)       #class name BlogPosts =  the table name (see render_front in MainPage(Handler) below)
     entry = db.TextProperty(required = True)
@@ -38,7 +40,7 @@ class BlogPosts(db.Model):       #class "Post" on udacity  #this will define an 
 
 
 
-class NewPost(Handler):     #formerly MainHandler(handler) and in the self.render the html was "front.html"(-es9/14/16)  # we want to show the form and the submitted blog posts
+class NewPost(Handler):     #formerly MainHandler(handler) and in the self.render the html was "front.html"(-es9/14/16)
     def render_front(self, title="", entry="", error=""):
         entries = db.GqlQuery("SELECT * FROM BlogPosts "        # name of table is the class name BlogPosts
                               "ORDER BY created DESC "
@@ -54,21 +56,15 @@ class NewPost(Handler):     #formerly MainHandler(handler) and in the self.rende
         if title and entry:                     #this is a success case
             e = BlogPosts(title = title, entry = entry)    #taking from class BlogPosts
             e.put()                                                                         #to store blog post entry in database
-            self.redirect("/blog")                  #to redirect to MainPage "/"
-        else:
-            error = "Please submit both a post title and a post entry.  Thank you."    #this is a fail case
+            self.redirect("/blog")                         #needs to redirect to indivpost page with indiv.html-9/15/16
+        else:                                   #this is a fail case
+            error = "Please submit both a post title and a post entry.  Thank you."
             self.render_front(title, entry, error)
 
-#class PostPage(Handler):
-#    def get(self, entry_id)    #I'm using "entry" for "post", but don't have all of that completed.....
-#    key = db.Key.from_path('Post', int(entry_id), parent=blog_key())  #see udacity solution pt2 1:54min
-#    entry = db.get(key)
-#    if not post:
-#        self.error(404)
-#        return
-#    self.render("permalink.html", post = post)
 
 
+
+class IndivPost(Handler):
 
 
 
@@ -81,7 +77,9 @@ class MainBlog(Handler):      #a separate page for new posts to submit to create
 
 
 
-app = webapp2.WSGIApplication([('/', MainBlog),
-                               ('/newpost', NewPost),
-                               ('/blog', MainBlog)],
+app = webapp2.WSGIApplication([('/', MainBlog),  #current front page (blog w/ 5 most recent posts)
+                               ('/blog', MainBlog),   #routes to blog w/ 5 most recent posts
+                               ('/newpost', NewPost),  #routes to blog post form
+                               ('/blog/newpost', NewPost), #routest to newpost form
+                               ('/newpost/indivpost', IndivPost)],  #routes to indivpost page
                                 debug=True)
