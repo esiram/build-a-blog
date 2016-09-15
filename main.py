@@ -74,10 +74,13 @@ class MainBlog(Handler):      #a separate page for new posts to submit to create
 
 
 
-# TO DO: make handler that directs to page new entry permalink
+# TO DO: make handler that directs to new entry permalink page
 class ViewPostHandler(webapp2.RequestHandler):  #to direct to permalink of newest individual blog posts
     def get(self, id):
-        self.response.write(4661104668049408)
+        pass
+#        key = db.Key.from_path('entry', int(id), parent=BlogPosts())
+#        entry = db.get(key)
+        self.response.write(5556931766779904)
 
 
 #TO DO: make each blog post title a permalink
