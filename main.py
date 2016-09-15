@@ -81,7 +81,7 @@ class MainBlog(Handler):      #a separate page for new posts to submit to create
 
 
 
-app = webapp2.WSGIApplication([('/', NewPost),
+app = webapp2.WSGIApplication([('/', MainBlog),
                                ('/newpost', NewPost),
                                ('/blog', MainBlog)],
                                 debug=True)

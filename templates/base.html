@@ -10,6 +10,7 @@
     width: 800px;
     margin: 0 auto;
     padding: 10px;
+    background-color: #F0F8FF;
   }
 
   .error {
@@ -39,26 +40,27 @@
   }
 
   hr {
-    margin: 20px auto;
+    margin: 40px auto;
   }
 
   .entry + .entry {
-    margin-top: 20px;
+    margin-top: 50px;
   }
 
   .entry-title {
     font-weight: bold;
-    font-size: 20px;
+    font-size: 30px;
   }
 
   .entry-body {
     margin:0;
     font-size: 17px;
+    padding: 10px 3% 20px;
   }
 </style>
 
     <body>
-      <h1 style="background-color: #ddd; color: #888; margin: 0; height: 50px">Esther Siram's Build-A-Blog</h1>
+      <h1 style="background-color: #F0FFFF; color: #008B8B; margin: 0; height: 50px; font-size: 45px; padding: 25px; font-variant: small-caps">Esther Siram's Build-A-Blog</h1>
       {% block content %}
       {% endblock %}
     </body>
