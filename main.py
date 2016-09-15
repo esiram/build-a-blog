@@ -10,37 +10,37 @@ jinja_env = jinja2.Environment(loader = jinja2.FileSystemLoader(template_dir),
                                autoescape = True)
 
 
-class Handler(webapp2.RequestHandler):  #"Blog handler" on udacity
+class Handler(webapp2.RequestHandler):                         #"Blog handler" on udacity
     def write(self, *a, **kw):
         self.response.out.write(*a, **kw)
 
     def render_str(self, template, **params): #takes file name [template] and extra parameters and...... creates a string to get rendered back to the browser in the render function below
         t = jinja_env.get_template(template)  #use jinja environment created above and have it get the file name [template]  causes jinja to load file and store it in t
-        return t.render(params)   #then we render t and pass in the parameters that were called into this function
+        return t.render(params)                               #then we render t and pass in the parameters that were called into this function
 
     def render(self, template, **kw):
-        self.write(self.render_str(template, **kw)) #to send back to browser (a string)
+        self.write(self.render_str(template, **kw))             #to send back to browser (a string)
 
 #blogstuff
 
-def blog_key(name = 'default'):
-    return db.Key.from_path('blogs', name)  #value of the blog key parent
+def entry_key(name = 'default'):                                 #note: per udacity hmwrk3 solution1 about 2 minutes in: the defaul is the parent name and possibly doesn't apply to lc assignment
+    return db.Key.from_path('entries', name)                      #value of the blog key parent
 
 
 
-class BlogPosts(db.Model):       #class "Post" on udacity  #this will define an entity and we need to define types of that entity (types, date, int, float etc) (we're pulling from the database now)
-    title = db.StringProperty(required = True)       #class name BlogPosts =  the table name (see render_front in MainPage(Handler) below)
+class BlogPosts(db.Model):                               #class "Post" on udacity  #this will define an entity and we need to define types of that entity (types, date, int, float etc) (we're pulling from the database now)
+    title = db.StringProperty(required = True)                  #class name BlogPosts =  the table name (see render_front in MainPage(Handler) below)
     entry = db.TextProperty(required = True)
-    created = db.DateTimeProperty(auto_now_add = True)  #look up google docs
+    created = db.DateTimeProperty(auto_now_add = True)           #look up google docs
     last_modified = db.DateTimeProperty(auto_now = True)
 
-    def render(self):       # this def render(self) added from solution Part1 of Basic Blog on udacity
-        self._render_text = self.content.replace('\n', '<br>')   #this part makes new lines show up
+    def render(self):                                              # this def render(self) added from solution Part1 of Basic Blog on udacity
+        self._render_text = self.content.replace('\n', '<br>')     #this part makes new lines show up
         return render_str("front.html", p = self)
 
 
 
-class NewPost(Handler):     #formerly MainHandler(handler) and in the self.render the html was "front.html"(-es9/14/16)
+class NewPost(Handler):                                         #formerly MainHandler(handler) and in the self.render the html was "front.html"(-es9/14/16)
     def render_front(self, title="", entry="", error=""):
         entries = db.GqlQuery("SELECT * FROM BlogPosts "        # name of table is the class name BlogPosts
                               "ORDER BY created DESC "
@@ -64,10 +64,6 @@ class NewPost(Handler):     #formerly MainHandler(handler) and in the self.rende
 
 
 
-class IndivPost(Handler):
-
-
-
 class MainBlog(Handler):      #a separate page for new posts to submit to created 9-14-16
     def get(self):
         entries = db.GqlQuery("SELECT * FROM BlogPosts "        # name of table is the class name BlogPosts
@@ -77,9 +73,21 @@ class MainBlog(Handler):      #a separate page for new posts to submit to create
 
 
 
-app = webapp2.WSGIApplication([('/', MainBlog),  #current front page (blog w/ 5 most recent posts)
-                               ('/blog', MainBlog),   #routes to blog w/ 5 most recent posts
-                               ('/newpost', NewPost),  #routes to blog post form
-                               ('/blog/newpost', NewPost), #routest to newpost form
-                               ('/newpost/indivpost', IndivPost)],  #routes to indivpost page
-                                debug=True)
+
+# TO DO: make handler that directs to page new entry permalink
+class ViewPostHandler(webapp2.RequestHandler):  #to direct to permalink of newest individual blog posts
+    def get(self, id):
+        self.response.write(4661104668049408)
+
+
+#TO DO: make each blog post title a permalink
+
+
+
+app = webapp2.WSGIApplication([
+                               webapp2.Route(r'/', handler=MainBlog, name='home'),
+                               webapp2.Route(r'/blog', handler=MainBlog, name='main_blog_page'),  #current front page (blog w/ 5 most recent posts)
+                               webapp2.Route(r'/newpost', handler=NewPost, name='newpost'),  #routes to blog post form
+                               webapp2.Route(r'/blog/newpost', handler=NewPost, name='newpost'), #routest to newpost form
+                               webapp2.Route(r'/blog/<id:\d+>', ViewPostHandler, name='id')],  #routes to ViewPostHandler page (permalink page)
+                               debug=True)
