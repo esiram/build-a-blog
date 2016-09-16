@@ -55,8 +55,9 @@ class NewPost(Handler):                                         #formerly MainHa
         entry = self.request.get("entry")
         if title and entry:                     #this is a success case
             e = BlogPosts(title = title, entry = entry)    #taking from class BlogPosts
-            e.put()                                                                         #to store blog post entry in database
-            self.redirect("/blog")                         #needs to redirect to permalink page with indiv.html-9/15/16
+            e.put()                                                     #to store blog post entry in database
+            x = str(e.key().id())
+            self.redirect('/blog/%s' % x)                         #needs to redirect to permalink page with indiv.html-9/15/16
         else:                                   #this is a fail case
             error = "Please submit both a post title and a post entry.  Thank you."
             self.render_front(title, entry, error)
