@@ -3,16 +3,14 @@
 {% extends "base.html" %}
 
 {% block content %}
-        <h1 style="background-color: #F0FFFF; color: #008B8B; padding: 25px; font-variant: small-caps"> This Blog </h1>
+        <h1 style="background-color: #F0FFFF; color: #008B8B; padding: 25px; font-variant: small-caps"> You Just "Permalinked" To This Blog </h1>
 
 
-        {% for entry in entries %}
-        <div class="Blogposts">
-          <pre class="entry-id"><a href="/blog/{{entry.key().id()}}"></pre>
-          <div class="entry-title">{{entry.title}}</div>
-          <pre class="entry-body">{{entry.entry}}</pre>
+        <div class="ViewPostHandler">
+          <div style="font-weight: bold; font-size: 30px", class="new_post.title">{{new_post.title}}</div>
+          <pre style="margin:0; font-size: 17px; padding: 10px 3% 20px", class="new_post.entry">{{new_post.entry}}</pre>
         </div>
-        {% endfor %}
+        <div class="error">{{error}}</div>
 
 {% endblock %}
 </html>

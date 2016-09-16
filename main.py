@@ -76,15 +76,15 @@ class MainBlog(Handler):      #a separate page for new posts to submit to create
 
 
 # TO DO: make handler that directs to new entry permalink page
-class ViewPostHandler(webapp2.RequestHandler):  #to direct to permalink of newest individual blog posts
+class ViewPostHandler(Handler):  #to direct to permalink of newest individual blog posts  #class ViewPostHandler(webapp2.RequestHandler)
     def get(self, id):
         int_id = int(id)
         new_post = BlogPosts.get_by_id(int_id)
 
         if new_post:
-            new_post = new_post.title + new_post.entry   #not sure this is great but it shows all
-            self.response.out.write(new_post)
-
+            # new_post = new_post.title + new_post.entry   #not sure this is great but it shows all
+            #self.response.out.write(new_post)
+            self.render("permalink.html", new_post=new_post)
         else:
             error = "Invalid id; please try again."
             self.response.out.write(error)
