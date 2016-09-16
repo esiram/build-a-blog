@@ -56,7 +56,7 @@ class NewPost(Handler):                                         #formerly MainHa
         if title and entry:                     #this is a success case
             e = BlogPosts(title = title, entry = entry)    #taking from class BlogPosts
             e.put()                                                                         #to store blog post entry in database
-            self.redirect("/blog")                         #needs to redirect to indivpost page with indiv.html-9/15/16
+            self.redirect("/blog")                         #needs to redirect to permalink page with indiv.html-9/15/16
         else:                                   #this is a fail case
             error = "Please submit both a post title and a post entry.  Thank you."
             self.render_front(title, entry, error)
@@ -81,8 +81,9 @@ class ViewPostHandler(webapp2.RequestHandler):  #to direct to permalink of newes
         new_post = BlogPosts.get_by_id(int_id)
 
         if new_post:
-            new_post = new_post.title
+            new_post = new_post.title + new_post.entry   #not sure this is great but it shows all
             self.response.out.write(new_post)
+
         else:
             error = "Invalid id; please try again."
             self.response.out.write(error)

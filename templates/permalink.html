@@ -3,8 +3,16 @@
 {% extends "base.html" %}
 
 {% block content %}
-        <h1 style="background-color: #F0FFFF; color: #008B8B; padding: 25px; font-variant: small-caps"> A Single Blog</h1>
+        <h1 style="background-color: #F0FFFF; color: #008B8B; padding: 25px; font-variant: small-caps"> Five Most Recent Blogs </h1>
 
+
+        {% for entry in entries %}
+        <div class="Blogposts">
+          <pre class="entry-id"><a href="/blog/{{entry.key().id()}}"></pre>
+          <div class="entry-title">{{entry.title}}</div>
+          <pre class="entry-body">{{entry.entry}}</pre>
+        </div>
+        {% endfor %}
 
 {% endblock %}
 </html>
