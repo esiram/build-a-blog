@@ -77,13 +77,22 @@ class MainBlog(Handler):      #a separate page for new posts to submit to create
 # TO DO: make handler that directs to new entry permalink page
 class ViewPostHandler(webapp2.RequestHandler):  #to direct to permalink of newest individual blog posts
     def get(self, id):
-        pass
-#        key = db.Key.from_path('entry', int(id), parent=BlogPosts())
-#        entry = db.get(key)
-        self.response.write(5556931766779904)
+        int_id = int(id)
+        new_post = BlogPosts.get_by_id(int_id)
+
+        if new_post:
+            new_post = new_post.title
+            self.response.out.write(new_post)
+        else:
+            error = "Invalid id; please try again."
+            self.response.out.write(error)
 
 
-#TO DO: make each blog post title a permalink
+
+#    def post("permalink.html", id):
+
+
+#TO DO: make each blog post title a permalink (Q:: will this happen on the MainBlog page???)
 
 
 
