@@ -9,8 +9,8 @@
 
         {% for entry in entries %}
         <div class="Blogposts">
-          <pre class="entry-id"><a href="/blog/{{entry.key().id()}}"></pre>
-          <div class="entry-title">{{entry.title}}</div>
+          <div class="entry-id"><a href="/blog/{{entry.key().id()}}">
+          <pre class="entry-title">{{entry.title}}</pre></a>
           <pre class="entry-body">{{entry.entry}}</pre>
         </div>
         {% endfor %}
